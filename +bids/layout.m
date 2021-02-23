@@ -356,17 +356,28 @@ function file_list = return_file_list(modality, subject, schema)
   % this does not cover coordsystem.json
   % jn to omit json but not .pos file for headshape.pos
 
-  pattern = 'sub-[a-zA-Z0-9]_([a-zA-Z0-9]+){1}\\..*[^jn]';
-  if isempty(schema)
-    pattern = 'sub-[a-zA-Z0-9]_([a-zA-Z0-9]+){1}\\..*';
+  % sub and ses part
+  pattern = ['^' subject.name '_'];
+  if ~isempty(subject.session)
+    pattern = [pattern subject.session '_'];
   end
+
+  % entities
+  pattern = [pattern '([a-zA-Z0-9]+-[a-zA-Z0-9]+_)*'];
+  
+  % suffix
+  pattern = [pattern '([a-zA-Z0-9]+\.){1}'];
+
+  % extention
+  pattern = [pattern '(?!json)([a-zA-Z0-9.]+){1}$'];
 
   pth = fullfile(subject.path, modality);
 
   [file_list, d] = bids.internal.file_utils('List', ...
                                             pth, ...
-                                            sprintf(['^%s.*' pattern '$'], ...
-                                                    subject.name));
+                                            pattern);
+                                            %sprintf(['^%s.*' pattern '$'], ...
+                                            %        subject.name));
 
   file_list = convert_to_cell(file_list);
 
