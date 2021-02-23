@@ -65,9 +65,9 @@ function derivatives = derivate(BIDS, out_path, name, varargin)
 
   % updating GeneratedBy
   if isfield(description, 'GeneratedBy')
-    description.GeneratedBy = [description.GeneratedBy pipeline];
+    description.GeneratedBy = [description.GeneratedBy; pipeline];
   else
-    description.GeneratedBy = [pipeline];
+    description.GeneratedBy = pipeline;
   end
 
   bids.util.jsonencode(descr_file, description, 'Indent', '  ');
