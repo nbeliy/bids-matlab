@@ -1,4 +1,4 @@
-function derivatives = derivate(BIDS, out_path, name, varargin)
+function DERIV = derivate(BIDS, out_path, name, varargin)
   %
   % Copy selected data from BIDS layout to given derivatives folder,
   % returning layout of new derivatives folder
@@ -34,7 +34,7 @@ function derivatives = derivate(BIDS, out_path, name, varargin)
     error(['Output path ' out_path ' not found']);
   end
 
-  derivatives = [];
+  DERIV = [];
   data_list = bids.query(BIDS, 'data', varargin{:});
   subjects_list = bids.query(BIDS, 'subjects', varargin{:});
 
@@ -78,6 +78,8 @@ function derivatives = derivate(BIDS, out_path, name, varargin)
   for iFile = 1:numel(data_list)
     copy_file(BIDS, pth_BIDSderiv, data_list{iFile});
   end
+  
+  DERIV = bids.layout(pth_BIDSderiv);
 
 end
 
@@ -112,7 +114,15 @@ function status = copy_file(BIDS, derivatives_folder, data_file)
   end
   % export metadata
   if ~strcmpi(file.ext, '.json') % skip if data file is json
-    bids.util.jsonencode(meta_file, file.meta);
+    meta = bids.internal.get_metadata(file.metafile);
+    if isfield(meta, 'IntendedFor')
+      for iFile = 1:numel(meta.IntendedFor)
+        if bids.internal.endsWith(meta.IntendedFor{iFile}, '.gz')
+          meta.IntendedFor{iFile} = meta.IntendedFor{iFile}(1:end - 3);
+        end
+      end
+    end
+    bids.util.jsonencode(meta_file, meta, 'Indent', '  ');
   end
 
   % checking that json is created
