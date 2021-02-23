@@ -356,9 +356,9 @@ function file_list = return_file_list(modality, subject, schema)
   % this does not cover coordsystem.json
   % jn to omit json but not .pos file for headshape.pos
 
-  pattern = '_([a-zA-Z0-9]+){1}\\..*[^jn]';
+  pattern = 'sub-[a-zA-Z0-9]_([a-zA-Z0-9]+){1}\\..*[^jn]';
   if isempty(schema)
-    pattern = '_([a-zA-Z0-9]+){1}\\..*';
+    pattern = 'sub-[a-zA-Z0-9]_([a-zA-Z0-9]+){1}\\..*';
   end
 
   pth = fullfile(subject.path, modality);
