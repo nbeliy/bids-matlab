@@ -45,11 +45,11 @@ function p = parse_filename(filename, fields)
     p = struct([]);
     return
   end
-  p.prfix = p.filename(1:pos-1);
+  p.prefix = p.filename(1:pos-1);
   basename = p.filename(pos:end);
 
   % -Identify all the BIDS entity-label pairs present in the filename (delimited by "_")
-  [parts, dummy] = regexp(basename{end}, '(?:_)+', 'split', 'match'); %#ok<ASGLU>
+  [parts, dummy] = regexp(basename, '(?:_)+', 'split', 'match'); %#ok<ASGLU>
 
   % -Identify the suffix and extension of this file
   [p.suffix, p.ext] = strtok(parts{end}, '.');
