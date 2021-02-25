@@ -1,7 +1,7 @@
-function DERIV = derivate(BIDS, out_path, name, varargin)
+function pth_BIDSderiv = derivate(BIDS, out_path, name, varargin)
   %
   % Copy selected data from BIDS layout to given derivatives folder,
-  % returning layout of new derivatives folder
+  % returning path to derivated dataset
   %
   % USAGE::
   %
@@ -28,13 +28,13 @@ function DERIV = derivate(BIDS, out_path, name, varargin)
 
   narginchk(3, Inf);
 
+  pth_BIDSderiv = '';
   BIDS = bids.layout(BIDS);
 
   if ~exist(out_path, 'dir')
     error(['Output path ' out_path ' not found']);
   end
 
-  DERIV = [];
   data_list = bids.query(BIDS, 'data', varargin{:});
   subjects_list = bids.query(BIDS, 'subjects', varargin{:});
 
@@ -78,8 +78,6 @@ function DERIV = derivate(BIDS, out_path, name, varargin)
   for iFile = 1:numel(data_list)
     copy_file(BIDS, pth_BIDSderiv, data_list{iFile});
   end
-  
-  DERIV = bids.layout(pth_BIDSderiv);
 
 end
 
