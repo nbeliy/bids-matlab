@@ -356,8 +356,14 @@ function file_list = return_file_list(modality, subject, schema)
   % this does not cover coordsystem.json
   % jn to omit json but not .pos file for headshape.pos
 
+  if isempty(schema)
+    prefix = '^([a-zA-Z0-9_]*)';
+  else
+    prefix = '^';
+  end
+
   % sub and ses part
-  pattern = ['^' subject.name '_'];
+  pattern = [prefix subject.name '_'];
   if ~isempty(subject.session)
     pattern = [pattern subject.session '_'];
   end
