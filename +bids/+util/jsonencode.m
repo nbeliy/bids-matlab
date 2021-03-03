@@ -46,8 +46,11 @@ function varargout = jsonencode(varargin)
         ismember(exist('jsonencode', 'file'), [2 3]); % jsonstuff / Matlab-compatible implementation
   end
 
-  if has_jsonencode
+    % SPM12
+  if exist('spm_jsonwrite', 'file') == 2
+    [varargout{1:nargout}] = spm_jsonwrite(varargin{:});
 
+  elseif has_jsonencode
     file = '';
 
     if ischar(varargin{1})
@@ -56,7 +59,7 @@ function varargout = jsonencode(varargin)
     end
 
     if numel(varargin) > 1
-      opts = varargin{2};
+      opts = varargin{:};
       varargin(2) = [];
       fn   = fieldnames(opts);
       for i = 1:numel(fn)
@@ -83,9 +86,6 @@ function varargout = jsonencode(varargin)
   elseif exist('jsonwrite', 'file') == 2
     [varargout{1:nargout}] = jsonwrite(varargin{:});
 
-    % SPM12
-  elseif exist('spm_jsonwrite', 'file') == 2
-    [varargout{1:nargout}] = spm_jsonwrite(varargin{:});
 
   else
     url = 'https://github.com/gllmflndn/JSONio';
